@@ -8,7 +8,7 @@ const listarLivros = async () => {
   });
 };
 
-const criarFilme = (filme) => {
+const criarLiFilme = (filme) => {
   const li = document.createElement("li");
   li.textContent = filme.titulo;
   ulElemento.appendChild(li);
