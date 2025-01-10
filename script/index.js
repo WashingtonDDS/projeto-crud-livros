@@ -16,20 +16,46 @@ listarLivros();
 
 const criarLiFilme = (filme) => {
   const li = document.createElement("li");
-  li.textContent = filme.titulo;
+  const botaoExcluir = document.createElement("button");
+  const spanTitulo = document.createElement("span");
+
+  botaoExcluir.textContent = "Excluir";
+  selecionarFilmeParaExcluir(botaoExcluir);
+
+  spanTitulo.textContent = filme.titulo;
+  li.appendChild(spanTitulo);
+  li.appendChild(botaoExcluir);
   li.id = filme.id;
   selecionarFilme(li);
 
   ulElemento.appendChild(li);
 };
 
+const selecionarFilmeParaExcluir = (botaoExcluir) => {
+  botaoExcluir.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const idFilme = event.target.parentElement.id;
+    deletarFilme(idFilme);
+  });
+};
+
 const selecionarFilme = async (li) => {
   li.addEventListener("click", (event) => {
-    idSelecionado = event.target.id;
-    elementoInputTitle.value = event.target.textContent;
+    const elemento = event.target;
+
+    if (elemento.nodeName === "LI") {
+      const spanTitulo = elemento.querySelector("span");
+      elementoInputTitle.value = spanTitulo.textContent;
+      idSelecionado = elemento.id;
+    } else if (elemento.nodeName === "SPAN") {
+      elementoInputTitle.value = event.target.textContent;
+      idSelecionado = elemento.parentElement.id;
+    } else {
+      return;
+    }
+
     elementoBotaoAlterar.disabled = false;
-    elementoBotaoCadastra.disabled = true;
-    console.log(idSelecionado);
+    elementoBotaoCadastra.disabled = "disabled";
   });
 };
 
@@ -38,7 +64,6 @@ const cadastrarFilme = async (event) => {
   const resposta = await axios.post(url, {
     titulo: elementoInputTitle.value,
   });
-  console.log(resposta);
 };
 
 const alterarFilme = async (event) => {
@@ -48,4 +73,11 @@ const alterarFilme = async (event) => {
   const resposta = await axios.put(`${url}/${idSelecionado}`, {
     titulo: elementoInputTitle.value,
   });
+};
+
+const deletarFilme = async (idFilme) => {
+  if (!idFilme) {
+    return;
+  }
+  const resposta = await axios.delete(`${url}/${idFilme}`);
 };
