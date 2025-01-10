@@ -1,6 +1,8 @@
 const url = "http://localhost:3000/livros";
 const ulElemento = document.querySelector("#filmes");
 const elementoInputTitle = document.querySelector("input[name='titulo']");
+const elementoBotaoAlterar = document.querySelector(".botao-alterar");
+const elementoBotaoCadastra = document.querySelector(".botao-cadastrar");
 let idSelecionado = null;
 
 const listarLivros = async () => {
@@ -25,6 +27,8 @@ const selecionarFilme = async (li) => {
   li.addEventListener("click", (event) => {
     idSelecionado = event.target.id;
     elementoInputTitle.value = event.target.textContent;
+    elementoBotaoAlterar.disabled = false;
+    elementoBotaoCadastra.disabled = true;
     console.log(idSelecionado);
   });
 };
